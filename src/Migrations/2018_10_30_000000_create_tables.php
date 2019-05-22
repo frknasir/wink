@@ -43,6 +43,15 @@ class CreateTables extends Migration
             $table->timestamps();
         });
 
+        Schema::create('wink_roles', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->timestamps();
+
+            $table->unique(['author_id', 'role_id']);
+        });
+
         Schema::create('wink_authors', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('slug')->unique();
@@ -53,6 +62,13 @@ class CreateTables extends Migration
             $table->string('avatar')->nullable();
             $table->rememberToken();
             $table->timestamps();
+        });
+
+        Schema::create('wink_authors_roles', function (Blueprint $table) {
+            $table->uuid('author_id');
+            $table->uuid('role_id');
+
+            $table->unique(['author_id', 'role_id']);
         });
 
         Schema::create('wink_pages', function (Blueprint $table) {
@@ -76,5 +92,7 @@ class CreateTables extends Migration
         Schema::dropIfExists('wink_authors');
         Schema::dropIfExists('wink_posts');
         Schema::dropIfExists('wink_pages');
+        Schema::dropIfExists('wink_roles');
+        Schema::dropIfExists('wink_authors_roles');
     }
 }

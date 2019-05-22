@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,7 +13,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-        $this->call(RolesTableSeeder::class);
+        DB::table('wink_roles')->insert([
+            [
+                'id' => Str::uuid(),
+                'name' => 'Admin',
+                'description' => 'An Admin'
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Contributor',
+                'description' => 'A Contributor'
+            ]
+        ]);
     }
 }

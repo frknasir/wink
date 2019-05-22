@@ -3,6 +3,7 @@
 namespace Wink\Console;
 
 use Wink\WinkAuthor;
+use Wink\WinkRole;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
@@ -35,13 +36,18 @@ class MigrateCommand extends Command
             ! Schema::connection(config('wink.database_connection'))->hasTable('wink_authors') ||
             ! WinkAuthor::count();
 
-        $this->call('migrate', [
+        $this->call('migrate:fresh', [
             '--database' => config('wink.database_connection'),
             '--path' => 'vendor/writingink/wink/src/Migrations',
         ]);
 
+        $this->call('db:seed', [
+            '--database' => config('wink.database_connection'),
+            '--class' => \Wink\Seeds\DatabaseSeeder::class,
+        ]);
+
         if ($shouldCreateNewAuthor) {
-            WinkAuthor::create([
+            $author = WinkAuthor::create([
                 'id' => (string) Str::uuid(),
                 'name' => 'Regina Phalange',
                 'slug' => 'regina-phalange',
@@ -49,6 +55,13 @@ class MigrateCommand extends Command
                 'email' => 'admin@mail.com',
                 'password' => Hash::make($password = str_random()),
             ]);
+
+            $this->line('author: '.$author);
+            $this->line(WinkRole::where('name', 'Admin')->first());
+
+            $author
+            ->roles()
+            ->attach(WinkRole::where('name', 'Admin')->first());
 
             $this->line('');
             $this->line('');
