@@ -2,8 +2,18 @@
 
 namespace Wink;
 
+use Wink\WinkAuthor;
+use Wink\Traits\HasComments;
+
 class WinkPost extends AbstractWinkModel
 {
+    use HasComments;
+
+    protected $casts = [
+        'meta' => 'array',
+        'published' => 'boolean',
+    ];
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -46,16 +56,6 @@ class WinkPost extends AbstractWinkModel
      */
     public $dates = [
         'publish_date',
-    ];
-
-    /**
-     * The attributes that should be casted.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'meta' => 'array',
-        'published' => 'boolean',
     ];
 
     /**

@@ -3,6 +3,7 @@
 namespace Wink\Http\Controllers;
 
 use Wink\WinkAuthor;
+use Wink\WinkRole;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
@@ -22,6 +23,7 @@ class TeamController
         })
             ->orderBy('created_at', 'DESC')
             ->withCount('posts')
+            ->with('roles')
             ->get();
 
         return TeamResource::collection($entries);
@@ -43,7 +45,7 @@ class TeamController
             ]);
         }
 
-        $entry = WinkAuthor::findOrFail($id);
+        $entry = WinkAuthor::findOrFail($id)->with('roles')->first();
 
         return response()->json([
             'entry' => $entry,
@@ -67,9 +69,12 @@ class TeamController
             'meta' => request('meta', (object) []),
         ];
 
-        validator($data, [
+        $toValidate = array_merge($data, array('roles' => request('roles')));
+
+        validator($toValidate, [
             'meta.theme' => 'in:dark,light',
             'name' => 'required',
+            'roles' => 'required',
             'slug' => 'required|'.Rule::unique(config('wink.database_connection').'.wink_authors', 'slug')->ignore(request('id')),
             'email' => 'required|email|'.Rule::unique(config('wink.database_connection').'.wink_authors', 'email')->ignore(request('id')),
         ])->validate();
@@ -89,6 +94,8 @@ class TeamController
         $entry->fill($data);
 
         $entry->save();
+
+        $entry->roles()->sync(WinkRole::select('id')->whereIn('name', request('roles'))->get());
 
         return response()->json([
             'entry' => $entry->fresh(),

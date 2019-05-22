@@ -30,6 +30,7 @@
                     slug: '',
                     email: '',
                     bio: 'I am who I\'m meant to be, this is me.',
+                    roles: [],
                     avatar: '',
                     password: '',
                     meta: {
@@ -98,6 +99,7 @@
                         this.form.slug = response.data.entry.slug;
                         this.form.email = response.data.entry.email;
                         this.form.bio = response.data.entry.bio;
+                        this.form.roles = response.data.entry.roles.map(role => role.name);
                         this.form.avatar = response.data.entry.avatar;
                         this.form.meta = {
                             meta_description: response.data.entry.meta.meta_description || '',
@@ -305,6 +307,18 @@
                     <label for="slug" class="input-label mb-4">Bio</label>
                     <mini-editor v-model="form.bio"></mini-editor>
                     <form-errors :errors="form.errors.bio"></form-errors>
+                </div>
+
+                <div class="input-group">
+                    <label for="roles" class="input-label">Role(s)</label>
+                    <select class="input"
+                            v-model="form.roles"
+                            id="roles" multiple>
+                        <option value="Admin">Admin</option>
+                        <option value="Contributor">Contributor</option>
+                    </select>
+
+                    <form-errors :errors="form.errors['roles']"></form-errors>
                 </div>
 
                 <div v-if="uploading">

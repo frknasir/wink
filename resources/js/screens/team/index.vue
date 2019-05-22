@@ -80,6 +80,9 @@
                             <router-link :to="{name:'team-edit', params:{id: entry.id}}" class="no-underline text-text-color">
                                 {{truncate(entry.name, 68)}}
                             </router-link>
+                            <small v-for="(role, index) in entry.roles" v-bind:key="index" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold px-2 mr-2 border border-gray-400 rounded shadow">
+                                {{ role.name }}
+                            </small>
                         </h2>
 
                         <small class="text-light">

@@ -4055,6 +4055,7 @@ __webpack_require__.r(__webpack_exports__);
         slug: '',
         email: '',
         bio: 'I am who I\'m meant to be, this is me.',
+        roles: [],
         avatar: '',
         password: '',
         meta: {
@@ -4115,6 +4116,9 @@ __webpack_require__.r(__webpack_exports__);
           _this3.form.slug = response.data.entry.slug;
           _this3.form.email = response.data.entry.email;
           _this3.form.bio = response.data.entry.bio;
+          _this3.form.roles = response.data.entry.roles.map(function (role) {
+            return role.name;
+          });
           _this3.form.avatar = response.data.entry.avatar;
           _this3.form.meta = {
             meta_description: response.data.entry.meta.meta_description || '',
@@ -49395,6 +49399,67 @@ var render = function() {
                   1
                 ),
                 _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "input-group" },
+                  [
+                    _c(
+                      "label",
+                      { staticClass: "input-label", attrs: { for: "roles" } },
+                      [_vm._v("Role(s)")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.roles,
+                            expression: "form.roles"
+                          }
+                        ],
+                        staticClass: "input",
+                        attrs: { id: "roles", multiple: "" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.form,
+                              "roles",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { value: "Admin" } }, [
+                          _vm._v("Admin")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Contributor" } }, [
+                          _vm._v("Contributor")
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("form-errors", {
+                      attrs: { errors: _vm.form.errors["roles"] }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
                 _vm.uploading ? _c("div", [_c("preloader")], 1) : _vm._e(),
                 _vm._v(" "),
                 !_vm.uploading
@@ -49613,9 +49678,27 @@ var render = function() {
                                       "\n                        "
                                   )
                                 ]
-                              )
+                              ),
+                              _vm._v(" "),
+                              _vm._l(entry.roles, function(role, index) {
+                                return _c(
+                                  "small",
+                                  {
+                                    key: index,
+                                    staticClass:
+                                      "bg-white hover:bg-gray-100 text-gray-800 font-semibold px-2 mr-2 border border-gray-400 rounded shadow"
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                            " +
+                                        _vm._s(role.name) +
+                                        "\n                        "
+                                    )
+                                  ]
+                                )
+                              })
                             ],
-                            1
+                            2
                           ),
                           _vm._v(" "),
                           _c("small", { staticClass: "text-light" }, [

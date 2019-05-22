@@ -3,9 +3,12 @@
 namespace Wink;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Wink\Traits\CanComment;
 
 class WinkAuthor extends AbstractWinkModel implements Authenticatable
 {
+    use CanComment;
+    
     /**
      * The attributes that aren't mass assignable.
      *
@@ -82,7 +85,7 @@ class WinkAuthor extends AbstractWinkModel implements Authenticatable
     public function roles()
     {
         return $this->belongsToMany(WinkRole::class, 'wink_authors_roles', 'author_id', 'role_id');
-    }  
+    } 
 
     /**
      * Get the name of the unique identifier for the user.

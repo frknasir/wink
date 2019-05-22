@@ -43,6 +43,15 @@ class CreateTables extends Migration
             $table->timestamps();
         });
 
+        Schema::create('wink_comments', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->morphs('commentable');
+            $table->text('comment');
+            $table->boolean('is_approved')->default(false);
+            $table->unsignedInteger('author_id')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('wink_roles', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
@@ -92,5 +101,6 @@ class CreateTables extends Migration
         Schema::dropIfExists('wink_pages');
         Schema::dropIfExists('wink_roles');
         Schema::dropIfExists('wink_authors_roles');
+        Schema::dropIfExists('wink_comments');
     }
 }
