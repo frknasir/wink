@@ -4,10 +4,12 @@ namespace Wink\Console;
 
 use Wink\WinkAuthor;
 use Wink\WinkRole;
+use Wink\Seeds\WinkDatabaseSeeder;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class MigrateCommand extends Command
 {
@@ -36,14 +38,22 @@ class MigrateCommand extends Command
             ! Schema::connection(config('wink.database_connection'))->hasTable('wink_authors') ||
             ! WinkAuthor::count();
 
-        $this->call('migrate:fresh', [
+        $this->call('migrate', [
             '--database' => config('wink.database_connection'),
             '--path' => 'vendor/writingink/wink/src/Migrations',
         ]);
 
-        $this->call('db:seed', [
-            '--database' => config('wink.database_connection'),
-            '--class' => \Wink\Seeds\DatabaseSeeder::class,
+        DB::table('wink_roles')->insert([
+            [
+                'id' => Str::uuid(),
+                'name' => 'Admin',
+                'description' => 'An Admin'
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Contributor',
+                'description' => 'A Contributor'
+            ]
         ]);
 
         if ($shouldCreateNewAuthor) {
@@ -55,9 +65,6 @@ class MigrateCommand extends Command
                 'email' => 'admin@mail.com',
                 'password' => Hash::make($password = str_random()),
             ]);
-
-            $this->line('author: '.$author);
-            $this->line(WinkRole::where('name', 'Admin')->first());
 
             $author
             ->roles()

@@ -48,8 +48,6 @@ class CreateTables extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->timestamps();
-
-            $table->unique(['author_id', 'role_id']);
         });
 
         Schema::create('wink_authors', function (Blueprint $table) {

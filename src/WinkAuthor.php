@@ -72,7 +72,17 @@ class WinkAuthor extends AbstractWinkModel implements Authenticatable
     public function posts()
     {
         return $this->hasMany(WinkPost::class, 'author_id');
-    }
+    } 
+
+    /**
+     * The authors that have the role.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(WinkRole::class, 'wink_authors_roles', 'author_id', 'role_id');
+    }  
 
     /**
      * Get the name of the unique identifier for the user.
